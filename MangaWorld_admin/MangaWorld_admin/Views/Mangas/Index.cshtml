@@ -1,0 +1,183 @@
+﻿@model IEnumerable<MangaWorld_admin.Models.Manga>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+    .filter{
+        display: inline-block;
+        vertical-align: top;
+        width: 20%;
+    }
+    .cont{
+        display: inline-block;
+        vertical-align: top;
+    }
+    #anchor{
+        display: block;
+        margin-top: 10px;
+    }
+    ul{
+        list-style-type: none;
+        margin-left: 0px;
+    }
+    ul li{
+        margin-left: -10px;
+    }
+    #searchBtn{
+        align-content: center;
+    }
+</style>
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<div class="filter">
+    <input type="text" name="mangaName" id="mangaName" placeholder="Search ..." />
+    <span id="anchor">Genres</span>
+    <ul id="genres" class="items">
+        @foreach (var item in ViewBag.Genres)
+        {
+            <li><input type="checkbox" name="@item.GenreId" value="@item.GenreId" />@item.GenreId</li>
+
+        }
+    </ul>
+    <span id="anchor">Author</span>
+    <select id="authors">
+        <option value="" selected></option>
+        @foreach (var item in ViewBag.Authors)
+        {
+            <option value="@item.AuthorName">@item.AuthorName</option>
+        }
+    </select>
+    <span id="anchor">Language</span>
+    <select id="langs">
+        <option value="" selected></option>
+        @foreach (var item in ViewBag.Langs)
+        {
+            <option value="@item.LanguageName">@item.LanguageName</option>
+        }
+    </select>
+    <button id="searchBtn" type="button" onclick="search()">Search</button>
+</div>
+
+<div class="cont" id="cont">
+    <table class="table" id="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Author.AuthorName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Language.LanguageName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status1.StatusName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ReleasedYear)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            @foreach (var item in Model)
+            {
+                if (!item.Deleted)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Author.AuthorName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Language.LanguageName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Status1.StatusName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ReleasedYear)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.MangaId }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.MangaId }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.MangaId })
+                        </td>
+                    </tr>
+                }
+
+            }
+        </tbody>
+        
+
+    </table>
+</div>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    function search() {
+        var name = document.getElementById('mangaName').value;
+        var authors = document.getElementById('authors');
+        var langs = document.getElementById('langs');
+        var genres = "";
+        var ul = document.getElementById('genres');
+        var lis = ul.getElementsByTagName('li');
+        for (let i = 0; i < lis.length; i++) {
+            var cBx = lis[i].getElementsByTagName('input')[0];
+            if (cBx.checked) {
+                genres += (cBx.value + "*");
+            }
+        }
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '@Url.Action("Filter", "Mangas")',
+            data: {
+                name: name,
+                genres: genres,
+                author: authors.options[authors.selectedIndex].value,
+                language: langs.options[langs.selectedIndex].value
+            },
+            success: function (response) {
+                var datas = [];
+                response.forEach(res => {
+                    datas.push(JSON.parse(res));
+                });
+                reloadTable(datas);
+            },
+            error: function (response) {
+                alert('Error!');
+            }
+        });
+    }
+
+    function reloadTable(datas) {
+        $('#table tbody tr').remove();
+        datas.forEach(data => {
+            var row = "<tr>"
+                + "<td>" + data.title + "</td>"
+                + "<td>" + data.author + "</td>"
+                + "<td>" + data.language + "</td>"
+                + "<td>" + data.status + "</td>"
+                + "<td>" + data.year + "</td>"
+                + "<td>" +
+                "<a href='https://localhost:44365/Mangas/Edit/" + data.mangaId + "'>Edit</a> | " +
+                "<a href='https://localhost:44365/Mangas/Details/" + data.mangaId + "'>Details</a> | " +
+                "<a href='https://localhost:44365/Mangas/Delete/" + data.mangaId + "'>Delete</a>"
+                + "</td>"
+                + "</tr>";
+            $('#table tbody').append(row);
+        });
+    }
+</script>
