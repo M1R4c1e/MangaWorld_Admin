@@ -177,7 +177,9 @@
                 "<a href='https://localhost:44365/Mangas/Delete/" + data.mangaId + "'>Delete</a>"
                 + "</td>"
                 + "</tr>";
-            $('#table tbody').append(row);
+            if (data.isDeleted === "False") {
+                $('#table tbody').append(row);
+            }
         });
     }
 </script>

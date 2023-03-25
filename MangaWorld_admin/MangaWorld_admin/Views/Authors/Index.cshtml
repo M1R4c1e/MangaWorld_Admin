@@ -1,0 +1,89 @@
+﻿@model IEnumerable<MangaWorld_admin.Models.Author>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<input type="text" name="authorName" id="authorName" placeholder="Search ..." />
+<button id="searchBtn" type="button" onclick="search()">Search</button>
+
+<table class="table" id="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AuthorName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Socials)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AuthorName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Socials)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.AuthorId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.AuthorId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.AuthorId })
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    function search() {
+        var name = document.getElementById('authorName').value;
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '@Url.Action("Filter", "Authors")',
+            data: {
+                name: name
+            },
+            success: function (response) {
+                var datas = [];
+                response.forEach(res => {
+                    datas.push(JSON.parse(res));
+                });
+                reloadTable(datas);
+            },
+            error: function (response) {
+                alert('Error!');
+            }
+        });
+    }
+
+    function reloadTable(datas) {
+        $('#table tbody tr').remove();
+        datas.forEach(data => {
+            var row = "<tr>"
+                + "<td>" + data.name + "</td>"
+                + "<td>" + data.social + "</td>"
+                + "<td>" +
+                "<a href='https://localhost:44365/Authors/Edit/" + data.authorId + "'>Edit</a> | " +
+                "<a href='https://localhost:44365/Authors/Details/" + data.authorId + "'>Details</a> | " +
+                "<a href='https://localhost:44365/Authors/Delete/" + data.authorId + "'>Delete</a>"
+                + "</td>"
+                + "</tr>";
+                $('#table tbody').append(row);
+        });
+    }
+</script>

@@ -1,0 +1,110 @@
+﻿@model IEnumerable<MangaWorld_admin.Models.ScanTeam>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+<input type="text" name="teamName" id="teamName" placeholder="Search ..." />
+<button id="searchBtn" type="button" onclick="search()">Search</button>
+
+<table class="table" id="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TeamName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Language.LanguageName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TeamDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TeamSocials)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            if (!item.Deleted)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TeamName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Language.LanguageName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TeamDescription)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TeamSocials)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.ScanTeamId }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.ScanTeamId }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.ScanTeamId })
+                    </td>
+                </tr>
+            }
+
+        }
+    </tbody>
+
+</table>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    function search() {
+        var name = document.getElementById('teamName').value;
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '@Url.Action("Filter", "ScanTeams")',
+            data: {
+                name: name
+            },
+            success: function (response) {
+                var datas = [];
+                response.forEach(res => {
+                    datas.push(JSON.parse(res));
+                });
+                reloadTable(datas);
+            },
+            error: function (response) {
+                alert('Error!');
+            }
+        });
+    }
+
+    function reloadTable(datas) {
+        $('#table tbody tr').remove();
+        datas.forEach(data => {
+            var row = "<tr>"
+                + "<td>" + data.teamName + "</td>"
+                + "<td>" + data.language + "</td>"
+                + "<td>" + data.description + "</td>"
+                + "<td>" + data.social + "</td>"
+                + "<td>" +
+                "<a href='https://localhost:44365/ScanTeams/Edit/" + data.teamId + "'>Edit</a> | " +
+                "<a href='https://localhost:44365/ScanTeams/Details/" + data.teamId + "'>Details</a> | " +
+                "<a href='https://localhost:44365/ScanTeams/Delete/" + data.teamId + "'>Delete</a>"
+                + "</td>"
+                + "</tr>";
+            if (data.isDeleted === "False") {
+                $('#table tbody').append(row);
+            }
+               
+        });
+    }
+</script>

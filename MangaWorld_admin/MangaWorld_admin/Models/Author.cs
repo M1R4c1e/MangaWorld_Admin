@@ -28,5 +28,14 @@ namespace MangaWorld_admin.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Manga> Mangas { get; set; }
+
+        public override string ToString()
+        {
+            string str = '{' +
+                "\"authorId\": \"" + this.AuthorId + "\", " +
+                "\"name\": \"" + this.AuthorName + "\", " +
+                "\"social\": \"" + this.Socials + "\"}";
+            return str;
+        }
     }
 }

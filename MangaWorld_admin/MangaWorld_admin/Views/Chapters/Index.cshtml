@@ -1,0 +1,57 @@
+﻿@model IEnumerable<MangaWorld_admin.Models.Chapter>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ChapterTitle)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Manga.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ChapterOrder)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ScanTeam.TeamName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ChapterTitle)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Manga.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ChapterOrder)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ScanTeam.TeamName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.MangaId, chapOrder = item.ChapterOrder }) |
+            @Html.ActionLink("Details", "Details", new { id = item.MangaId, chapOrder = item.ChapterOrder }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.MangaId, chapOrder = item.ChapterOrder })
+        </td>
+    </tr>
+}
+
+</table>
+<p>
+    @if (ViewBag.NoBack == null)
+    {
+        <a href="@Url.Action("Details", "Mangas", new { id = Model.ToList().ElementAt(0).MangaId })">Back</a>
+    }
+</p>

@@ -17,39 +17,65 @@ namespace MangaWorld_admin.Controllers
         // GET: Mangas
         public ActionResult Index()
         {
-            var mangas = db.Mangas.Include(m => m.Author).Include(m => m.Language).Include(m => m.Status1);
-            var genres = db.Genres.ToList();
-            var authors = db.Authors.ToList();
-            var langs = db.Languages.ToList();
-            ViewBag.Genres = genres;
-            ViewBag.Authors = authors;
-            ViewBag.Langs = langs;
-            return View(mangas.ToList());
+            if (SessionCheck.onSession())
+            {
+                var mangas = db.Mangas.Include(m => m.Author).Include(m => m.Language).Include(m => m.Status1);
+                var genres = db.Genres.ToList();
+                var authors = db.Authors.ToList();
+                var langs = db.Languages.ToList();
+                ViewBag.Genres = genres;
+                ViewBag.Authors = authors;
+                ViewBag.Langs = langs;
+                return View(mangas.ToList());
+            }
+            return RedirectToAction("Login", "Home");
         }
 
         // GET: Mangas/Details/5
         public ActionResult Details(string id)
         {
-            if (id == null)
+            if (SessionCheck.onSession())
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Manga manga = db.Mangas.Find(id);
+                var rating = db.Ratings.Where(r => r.MangaId.Equals(id)).ToList();
+                if (rating.Count == 0)
+                {
+                    ViewBag.Rating = "--";
+                }
+                else
+                {
+                    int sum = 0;
+                    foreach (var r in rating.ToList())
+                    {
+                        sum += r.Score;
+                    }
+                    ViewBag.Rating = sum / rating.ToList().Count;
+                }
+                if (manga == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(manga);
             }
-            Manga manga = db.Mangas.Find(id);
-            if (manga == null)
-            {
-                return HttpNotFound();
-            }
-            return View(manga);
+            return RedirectToAction("Login", "Home");
         }
 
         // GET: Mangas/Create
         public ActionResult Create()
         {
-            ViewBag.Genres = db.Genres.ToList();
-            ViewBag.AuthorId = new SelectList(db.Authors, "AuthorId", "AuthorName");
-            ViewBag.LanguageId = new SelectList(db.Languages, "LanguageId", "LanguageName");
-            ViewBag.Status = new SelectList(db.Status, "StatusId", "StatusName");
-            return View();
+            if (SessionCheck.onSession())
+            {
+                ViewBag.Genres = db.Genres.ToList();
+                ViewBag.AuthorId = new SelectList(db.Authors, "AuthorId", "AuthorName");
+                ViewBag.LanguageId = new SelectList(db.Languages, "LanguageId", "LanguageName");
+                ViewBag.Status = new SelectList(db.Status, "StatusId", "StatusName");
+                return View();
+            }
+            return RedirectToAction("Login", "Home");
         }
 
         // POST: Mangas/Create
@@ -59,36 +85,44 @@ namespace MangaWorld_admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "MangaId,Title,AltTitle,MangaPath,Summary,AuthorId,Genres,LanguageId,Status,ReleasedYear,IsPublished")] Manga manga)
         {
-            if (ModelState.IsValid)
+            if (SessionCheck.onSession())
             {
-                manga.Deleted = false;
-                db.Mangas.Add(manga);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+                if (ModelState.IsValid)
+                {
+                    manga.Deleted = false;
+                    db.Mangas.Add(manga);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
 
-            ViewBag.AuthorId = new SelectList(db.Authors, "AuthorId", "AuthorName", manga.AuthorId);
-            ViewBag.LanguageId = new SelectList(db.Languages, "LanguageId", "LanguageName", manga.LanguageId);
-            ViewBag.Status = new SelectList(db.Status, "StatusId", "StatusName", manga.Status);
-            return View(manga);
+                ViewBag.AuthorId = new SelectList(db.Authors, "AuthorId", "AuthorName", manga.AuthorId);
+                ViewBag.LanguageId = new SelectList(db.Languages, "LanguageId", "LanguageName", manga.LanguageId);
+                ViewBag.Status = new SelectList(db.Status, "StatusId", "StatusName", manga.Status);
+                return View(manga);
+            }
+            return RedirectToAction("Login", "Home");
         }
 
         // GET: Mangas/Edit/5
         public ActionResult Edit(string id)
         {
-            if (id == null)
+            if (SessionCheck.onSession())
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Manga manga = db.Mangas.Find(id);
+                if (manga == null)
+                {
+                    return HttpNotFound();
+                }
+                ViewBag.AuthorId = new SelectList(db.Authors, "AuthorId", "AuthorName", manga.AuthorId);
+                ViewBag.LanguageId = new SelectList(db.Languages, "LanguageId", "LanguageName", manga.LanguageId);
+                ViewBag.Status = new SelectList(db.Status, "StatusId", "StatusName", manga.Status);
+                return View(manga);
             }
-            Manga manga = db.Mangas.Find(id);
-            if (manga == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.AuthorId = new SelectList(db.Authors, "AuthorId", "AuthorName", manga.AuthorId);
-            ViewBag.LanguageId = new SelectList(db.Languages, "LanguageId", "LanguageName", manga.LanguageId);
-            ViewBag.Status = new SelectList(db.Status, "StatusId", "StatusName", manga.Status);
-            return View(manga);
+            return RedirectToAction("Login", "Home");
         }
 
         // POST: Mangas/Edit/5
@@ -98,31 +132,39 @@ namespace MangaWorld_admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "MangaId,Title,AltTitle,MangaPath,Summary,AuthorId,Genres,LanguageId,Status,ReleasedYear,IsPublished,Deleted")] Manga manga)
         {
-            if (ModelState.IsValid)
+            if (SessionCheck.onSession())
             {
-                db.Entry(manga).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(manga).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                ViewBag.AuthorId = new SelectList(db.Authors, "AuthorId", "AuthorName", manga.AuthorId);
+                ViewBag.LanguageId = new SelectList(db.Languages, "LanguageId", "LanguageName", manga.LanguageId);
+                ViewBag.Status = new SelectList(db.Status, "StatusId", "StatusName", manga.Status);
+                return View(manga);
             }
-            ViewBag.AuthorId = new SelectList(db.Authors, "AuthorId", "AuthorName", manga.AuthorId);
-            ViewBag.LanguageId = new SelectList(db.Languages, "LanguageId", "LanguageName", manga.LanguageId);
-            ViewBag.Status = new SelectList(db.Status, "StatusId", "StatusName", manga.Status);
-            return View(manga);
+            return RedirectToAction("Login", "Home");
         }
 
         // GET: Mangas/Delete/5
         public ActionResult Delete(string id)
         {
-            if (id == null)
+            if (SessionCheck.onSession())
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                Manga manga = db.Mangas.Find(id);
+                if (manga == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(manga);
             }
-            Manga manga = db.Mangas.Find(id);
-            if (manga == null)
-            {
-                return HttpNotFound();
-            }
-            return View(manga);
+            return RedirectToAction("Login", "Home");
         }
 
         // POST: Mangas/Delete/5
@@ -130,10 +172,14 @@ namespace MangaWorld_admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
-            Manga manga = db.Mangas.Find(id);
-            db.Mangas.Remove(manga);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            if (SessionCheck.onSession())
+            {
+                Manga manga = db.Mangas.Find(id);
+                db.Mangas.Remove(manga);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Login", "Home");
         }
 
         [HttpGet]

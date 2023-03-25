@@ -1,0 +1,50 @@
+﻿@model MangaWorld_admin.Models.ScanTeam
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ScanTeam</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Language.LanguageName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Language.LanguageName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TeamName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TeamName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TeamDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TeamDescription)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TeamSocials)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TeamSocials)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ScanTeamId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

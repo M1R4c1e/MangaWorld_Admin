@@ -35,7 +35,15 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Language.LanguageName)
+            Rating
+        </dt>
+
+        <dd>
+            @ViewBag.Rating
+        </dd>
+
+        <dt>
+            Language
         </dt>
 
         <dd>
@@ -43,7 +51,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Status1.StatusName)
+            Status
         </dt>
 
         <dd>
@@ -82,9 +90,14 @@
             @Html.DisplayFor(model => model.IsPublished)
         </dd>
 
+        <dt>
+            <a href="@Url.Action("Index", "Chapters", new { id = Model.MangaId })">List chapters</a>
+        </dt>
     </dl>
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.MangaId }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
