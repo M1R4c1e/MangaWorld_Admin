@@ -39,7 +39,7 @@ namespace MangaWorld_admin.Controllers
                     Session["AdminId"] = CurrentAdmin.FirstOrDefault().AdminId;
                     Session["AdminName"] = CurrentAdmin.FirstOrDefault().AdminName;
 
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Index", "Mangas");
                 }
                 else
                 {

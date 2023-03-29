@@ -42,6 +42,7 @@ namespace MangaWorld_admin.Controllers
                 }
                 Manga manga = db.Mangas.Find(id);
                 var rating = db.Ratings.Where(r => r.MangaId.Equals(id)).ToList();
+                ViewBag.comment = db.Comments.Where(c => c.MangaId.Equals(id)).ToList().Count;
                 if (rating.Count == 0)
                 {
                     ViewBag.Rating = "--";

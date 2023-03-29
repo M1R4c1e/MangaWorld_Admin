@@ -1,4 +1,5 @@
-﻿@model IEnumerable<MangaWorld_admin.Models.Chapter>
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<MangaWorld_admin.Models.Chapter>
 
 @{
     ViewBag.Title = "Index";
@@ -12,16 +13,16 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.ChapterTitle)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().ChapterTitle)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Manga.Title)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().Manga.Title)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ChapterOrder)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().ChapterOrder)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ScanTeam.TeamName)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().ScanTeam.TeamName)
         </th>
         <th></th>
     </tr>
@@ -49,6 +50,10 @@
 }
 
 </table>
+<div class="pagination" style="margin-left: 400px">
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+</div>
 <p>
     @if (ViewBag.NoBack == null)
     {

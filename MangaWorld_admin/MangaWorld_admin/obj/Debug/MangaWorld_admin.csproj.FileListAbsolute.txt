@@ -101,8 +101,12 @@ C:\Users\admin\source\repos\MangaWorld_admin\MangaWorld_admin\bin\Microsoft.Owin
 C:\Users\admin\source\repos\MangaWorld_admin\MangaWorld_admin\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 C:\Users\admin\source\repos\MangaWorld_admin\MangaWorld_admin\bin\Microsoft.Owin.Security.OAuth.xml
 C:\Users\admin\source\repos\MangaWorld_admin\MangaWorld_admin\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-C:\Users\admin\source\repos\MangaWorld_admin\MangaWorld_admin\obj\Debug\MangaWorld_admin.csproj.AssemblyReference.cache
 C:\Users\admin\source\repos\MangaWorld_admin\MangaWorld_admin\obj\Debug\MangaWorld_admin.csproj.CoreCompileInputs.cache
 C:\Users\admin\source\repos\MangaWorld_admin\MangaWorld_admin\obj\Debug\MangaWorld_admin.csproj.CopyComplete
 C:\Users\admin\source\repos\MangaWorld_admin\MangaWorld_admin\obj\Debug\MangaWorld_admin.dll
 C:\Users\admin\source\repos\MangaWorld_admin\MangaWorld_admin\obj\Debug\MangaWorld_admin.pdb
+C:\Users\admin\source\repos\MangaWorld_admin\MangaWorld_admin\bin\PagedList.dll
+C:\Users\admin\source\repos\MangaWorld_admin\MangaWorld_admin\bin\PagedList.Mvc.dll
+C:\Users\admin\source\repos\MangaWorld_admin\MangaWorld_admin\bin\PagedList.xml
+C:\Users\admin\source\repos\MangaWorld_admin\MangaWorld_admin\bin\PagedList.Mvc.xml
+C:\Users\admin\source\repos\MangaWorld_admin\MangaWorld_admin\obj\Debug\MangaWorld_admin.csproj.AssemblyReference.cache

@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MangaWorld_admin.Models;
+using PagedList;
 
 namespace MangaWorld_admin.Controllers
 {
@@ -15,17 +16,20 @@ namespace MangaWorld_admin.Controllers
         private DBcontext db = new DBcontext();
 
         // GET: Chapters
-        public ActionResult Index(string id)
+        public ActionResult Index(string id, int? page)
         {
             if (SessionCheck.onSession())
             {
+                int pageSize = 5;
+                int pageIndex = 1;
+                pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
                 if (id != null)
                 {
-                    var chapters = db.Chapters.Include(c => c.ChapterType).Include(c => c.Manga).Include(c => c.ScanTeam).Where(c => c.MangaId.Equals(id));
-                    return View(chapters.ToList());
+                    var chapters = db.Chapters.Include(c => c.ChapterType).Include(c => c.Manga).Include(c => c.ScanTeam).Where(c => c.MangaId.Equals(id)).OrderBy(c => c.ChapterOrder);
+                    return View(chapters.ToPagedList(pageIndex, pageSize));
                 }
                 ViewBag.NoBack = true;
-                return View(db.Chapters.Include(c => c.ChapterType).Include(c => c.Manga).Include(c => c.ScanTeam).ToList());
+                return View(db.Chapters.Include(c => c.ChapterType).Include(c => c.Manga).Include(c => c.ScanTeam).ToPagedList(pageIndex, pageSize));
             }
             return RedirectToAction("Login", "Home");
 

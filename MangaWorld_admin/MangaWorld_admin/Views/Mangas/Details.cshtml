@@ -91,13 +91,16 @@
         </dd>
 
         <dt>
-            <a href="@Url.Action("Index", "Chapters", new { id = Model.MangaId })">List chapters</a>
+            <a href="@Url.Action("Index", "Chapters", new { id = Model.MangaId })">List chapters</a><br/>
+            <a href="@Url.Action("Index", "Comments", new { id = Model.MangaId })">See all comments (@ViewBag.comment)</a><br/>
+            <p style="margin-top: 10px">
+                @Html.ActionLink("Edit", "Edit", new { id = Model.MangaId }) |
+                @Html.ActionLink("Back to List", "Index")
+            </p>
         </dt>
+        
     </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.MangaId }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+
 
 <script src="~/Scripts/jquery-3.4.1.min.js"></script>

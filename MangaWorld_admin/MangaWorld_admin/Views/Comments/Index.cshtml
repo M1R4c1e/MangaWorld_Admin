@@ -1,0 +1,59 @@
+﻿@using PagedList.Mvc
+@model PagedList.IPagedList<MangaWorld_admin.Models.Comment>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+    .comment {
+        display: block;
+    }
+
+    .item {
+        margin-top: 14px;
+        background-color: #e4edf5;
+        padding: 5px 5px;
+        border-bottom: 1px solid black;
+    }
+
+    .content {
+        padding-left: 10px;
+        margin-left: 5px;
+    }
+
+    .date {
+        padding-left: 10px;
+        margin-left: 5px;
+    }
+</style>
+
+<h2>@ViewBag.MangaTitle</h2>
+<h3>Comments</h3>
+
+@foreach (var item in Model)
+{
+    <div class="item">
+        <div class="comment">
+            <div class="username">
+                <h4>@item.User.UserName</h4>
+            </div>
+            <div class="content">
+                <p>@item.CommentContent</p>
+            </div>
+            <div class="date">
+                <span>@item.CommentDate</span>
+            </div>
+        </div>
+    </div>
+
+    <br />
+}
+
+<div class="pagination" style="margin-left: 400px">
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+</div>
+<p>
+    <a href="@Url.Action("Details", "Mangas", new { id = Model.ToList().ElementAt(0).MangaId })">Back</a>
+</p>
